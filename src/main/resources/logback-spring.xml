@@ -1,0 +1,62 @@
+<configuration scan="true" scanPeriod="10 seconds">
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+	<property name="LOG_PATH" value="E://StsWorkspace//mgr//logs" /><!-- 这里指定日志保存到哪个文件夹里去，据说要指定绝对路径 -->
+	
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    	<filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 表示这个appender只记录info级别的日志 -->
+            <level>info</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <File>${LOG_PATH}/info/info.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/info/info-%d{yyyyMMdd}-%i.log.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>180</maxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%msg%n
+            </Pattern>
+        </layout>
+    </appender>
+
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <File>${LOG_PATH}/error/error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+        <!--  ${LOG_PATH}/error/error-%d{yyyy-MM-dd_HH-mm}.log.zip-->
+            <fileNamePattern>${LOG_PATH}/error/error-%d{yyyy-MM-dd}-%i.log.zip<!-- 这里后缀只要带了.zip就会自动把满了的日志压缩成zip包 -->
+            </fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>1MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <maxHistory>180</maxHistory>
+            <!-- 取决于上面的fileNamePattern的%d后面的大括号里是什么，如果是到分钟(如：{yyyy-MM-dd_HH-mm})，那就只会保留近maxHistory分钟的日志，这个并不完全准确-->
+            <!-- 只能说大概，因为也有可能保存了超过maxHistory分钟一些的日志 -->
+            <!-- 而如果是面的fileNamePattern的%d后面的大括号里是以天的形式命名(如：{yyyy-MM-dd})，那就会保留maxHistory天的日志，写成30的话就一个月，180的话不就半年咯？ -->
+        </rollingPolicy>
+        <append>true</append>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} -%msg%n
+            </Pattern>
+        </layout>
+    </appender>
+    
+    <!-- hibernate日志输入 -->
+    <!-- <logger name="org.hibernate.type.descriptor.sql.BasicBinder"
+        level="TRACE" />
+    <logger name="org.hibernate.type.descriptor.sql.BasicExtractor"
+        level="TRACE" />
+    <logger name="org.hibernate.SQL" level="INFO" />
+    <logger name="org.hibernate.engine.QueryParameters" level="INFO" />
+    <logger name="org.hibernate.engine.query.HQLQueryPlan" level="INFO" /> -->
+
+    <root level="INFO"><!-- 这里写的WARN，相当于只日志代码里只有Warn及以上的才会生效，一般刚刚开始开发的时候写INFO，要不然项目启动了没啥动静 -->
+        <appender-ref ref="INFO_FILE" /><!-- 但是一旦有有效的日志代码的话，除非这个appender里面还定义了filter，要不然的话会分别记录到下面的appender里去 -->
+        <appender-ref ref="ERROR_FILE" />
+    </root>    
+</configuration>
