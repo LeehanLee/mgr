@@ -2,6 +2,9 @@ package com.infi.utility;
 
 import java.nio.charset.Charset;
 import java.util.Base64;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.infi.model.dto.TokenInfo;
@@ -9,6 +12,17 @@ import com.infi.model.dto.TokenInfo;
 public class AuthUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(AuthUtils.class);
+
+	public static TokenInfo getTokenInfoFromRequest(HttpServletRequest request) {
+		if (request == null) {
+			return null;
+		}
+		String tokenStr = request.getHeader("token");
+		if (tokenStr == null) {
+			return null;
+		}
+		return buildTokenObj(tokenStr);
+	}
 
 	public static String buildTokenString(TokenInfo tokenInfo) {
 		String cuserBase64 = Base64.getEncoder().encodeToString(Json.serialize(tokenInfo).getBytes());

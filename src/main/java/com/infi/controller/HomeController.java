@@ -3,8 +3,8 @@ package com.infi.controller;
 import java.util.ArrayList;
 import java.util.Base64;
 import javax.servlet.http.HttpServletResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +21,7 @@ import com.infi.utility.Json;
 
 @Controller
 public class HomeController {
-	private final static Logger logger = LoggerFactory.getLogger(HomeController.class);
+//	private final static Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	@Autowired
 	IAuthenticationService service;
@@ -29,7 +29,7 @@ public class HomeController {
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/api/restlogin")
 	@ResponseBody
-	public ResponseDto restlogin(@RequestBody Sysaccount account, HttpServletResponse response) {
+	public ResponseDto restlogin(@RequestBody Sysaccount account, HttpServletResponse response) throws Exception {
 		if (service.login(account)) {
 			CurrentUser cuser = new CurrentUser();
 			OpenInfo openInfo = new OpenInfo(account.getUsername(), "");
@@ -40,7 +40,7 @@ public class HomeController {
 			rights.add("");// 暂时用这个
 			tokenInfo.setRights(rights);
 			cuser.setToken(AuthUtils.buildTokenString(tokenInfo));
-			logger.info(account.getUsername() + " 登录成功");
+//			logger.info(account.getUsername() + " 登录成功");
 			return ResponseDto.DataSuccess(cuser);
 		} else {
 			return ResponseDto.Error("账号或密码错误");

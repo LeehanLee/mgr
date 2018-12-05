@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.infi.model.dto.ResponseDto;
+import com.infi.model.dto.TokenInfo;
+import com.infi.utility.AuthUtils;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -17,7 +19,12 @@ public class GlobalExceptionHandler {
 	@ResponseBody
 	public ResponseDto<String> jsonErrorHandler(HttpServletRequest req, Exception e) throws Exception {
 		ResponseDto<String> result = ResponseDto.Error(e.getMessage());
-		logger.error(e.getMessage() + System.lineSeparator() + e.getStackTrace());
+		TokenInfo token = AuthUtils.getTokenInfoFromRequest(req);
+		String msg = "Header里的token为空";
+		if (token != null) {
+			msg = "当前用户: " + token.getName();
+		}
+		logger.error(msg, e);
 
 		return result;
 	}

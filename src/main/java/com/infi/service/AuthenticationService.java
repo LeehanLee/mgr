@@ -12,8 +12,11 @@ public class AuthenticationService implements IAuthenticationService {
 	SysAccountDao dao;
 
 	@Override
-	public boolean login(Sysaccount account) {
+	public boolean login(Sysaccount account) throws Exception {
 		Sysaccount acc = dao.getByName(account.getUsername());
+		if (acc != null && !acc.getEnabled()) {
+			throw new Exception("用户未启用");
+		}
 		return acc != null && acc.getPassword().equals(account.getPassword());
 	}
 
