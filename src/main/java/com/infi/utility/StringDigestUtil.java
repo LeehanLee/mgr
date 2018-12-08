@@ -49,6 +49,20 @@ public class StringDigestUtil {
 		return mixedDigest(sourceStr).equals(encrypted);
 	}
 
+	public static String md5(String sourceStr) {
+		if (sourceStr == null) {
+			return null;
+		}
+
+		try {
+			return bytesToString(doMd5(sourceStr.getBytes()));
+		} catch (NoSuchAlgorithmException e) {
+			logger.error("Md5 error: " + System.lineSeparator(), e);
+		}
+
+		return null;
+	}
+
 	private static byte[] doSha256(byte[] srcBytes) throws NoSuchAlgorithmException {
 
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -67,7 +81,6 @@ public class StringDigestUtil {
 		return new String(Base64.getEncoder().encode(srcBytes));
 	}
 
-	@SuppressWarnings("unused")
 	private static String bytesToString(byte[] b) {
 		int i;
 		StringBuffer buf = new StringBuffer("");
@@ -82,11 +95,11 @@ public class StringDigestUtil {
 		return buf.toString();
 	}
 
-//	private static byte[] concat(byte[] arr1, byte[] arr2) {
-//		int len1 = arr1.length;
-//		int len2 = arr2.length;
-//		byte[] result = Arrays.copyOf(arr1, len1 + len2);// 数组扩容
-//		System.arraycopy(arr2, 0, result, len1, len2);
-//		return result;
-//	}
+	// private static byte[] concat(byte[] arr1, byte[] arr2) {
+	// int len1 = arr1.length;
+	// int len2 = arr2.length;
+	// byte[] result = Arrays.copyOf(arr1, len1 + len2);// 数组扩容
+	// System.arraycopy(arr2, 0, result, len1, len2);
+	// return result;
+	// }
 }

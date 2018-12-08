@@ -1,14 +1,17 @@
 package com.infi.dao;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import com.infi.dbentity.qifei.Sysrole;
+
+import com.infi.dbentity.mgr.Sysrole;
 import com.infi.exception.DuplicateEntityException;
 import com.infi.model.dto.ListDto;
 
@@ -29,8 +32,9 @@ public class SysRoleDao extends IBasicCrud<Sysrole> {
 			throw new DuplicateEntityException("角色名已被占用");
 		}
 
-		int successCount = jdbcTemplate.update("insert into sysrole(name, created, enabled) values(?, ?, ?) ;",
-				new Object[] { a.getName(), new Date(), a.getEnabled() });
+		int successCount = jdbcTemplate.update(
+				"insert into sysrole(id, name, created, enabled, rights) values(?, ?, ?, ?, ?) ;",
+				new Object[] { UUID.randomUUID().toString(), a.getName(), new Date(), a.getEnabled(), a.getRights() });
 		return successCount > 0;
 	}
 
@@ -64,13 +68,13 @@ public class SysRoleDao extends IBasicCrud<Sysrole> {
 	}
 
 	@Override
-	public Sysrole getById(int id) {
+	public Sysrole getById(Object id) {
 		return (Sysrole) jdbcTemplate.queryForObject("select * from sysrole where  id=? limit 0 , 1 ",
 				new Object[] { id }, new BeanPropertyRowMapper<Sysrole>(Sysrole.class));
 	}
 
 	@Override
-	public ListDto<Sysrole> getList(Integer page, Integer pageSize) {
+	public ListDto<Sysrole> getList(Integer page, Integer pageSize, HashMap<String, Object> condition) {
 		if (page == null || page <= 0) {
 			page = 1;
 		}

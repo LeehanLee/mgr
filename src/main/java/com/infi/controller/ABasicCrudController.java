@@ -1,5 +1,7 @@
 package com.infi.controller;
 
+import java.util.HashMap;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -14,43 +16,50 @@ public abstract class ABasicCrudController<T> {
 
 	abstract IBasicCrud<T> getDao();
 
-	@RequireAuth("")
+	@RequireAuth("getList")
 	@RequestMapping("/getList")
-	public ResponseDto<ListDto<T>> getList(Integer page, Integer pageSize) {
-		return ResponseDto.DataSuccess(getDao().getList(page, pageSize));
+	public ResponseDto<ListDto<T>> getList(Integer page, Integer pageSize, HashMap<String, Object> condition) {
+		return ResponseDto.DataSuccess(getDao().getList(page, pageSize, condition));
 	}
 
-	@RequireAuth("")
+	@RequireAuth("getById")
 	@RequestMapping("/getById")
 	public ResponseDto<T> getById(int id) {
 		return ResponseDto.DataSuccess(getDao().getById(id));
 	}
 
 	@SuppressWarnings("rawtypes")
-	@RequireAuth("")
+	@RequireAuth("insert")
 	@RequestMapping("/insert")
 	public ResponseDto insert(@RequestBody T a) throws DuplicateEntityException {
 		return ResponseDto.OperationSuccess(getDao().insert(a));
 	}
 
 	@SuppressWarnings("rawtypes")
-	@RequireAuth("")
+	@RequireAuth("update")
 	@RequestMapping("/update")
 	public ResponseDto update(@RequestBody T a) throws Exception {
 		return ResponseDto.OperationSuccess(getDao().update(a));
 	}
 
 	@SuppressWarnings("rawtypes")
-	@RequireAuth("")
+	@RequireAuth("delete")
 	@RequestMapping("/delete")
 	public ResponseDto delete(int id) throws ExistsChildException {
 		return ResponseDto.OperationSuccess(getDao().delete(id));
 	}
 
 	@SuppressWarnings("rawtypes")
-	@RequireAuth("")
-	@RequestMapping("/updateStatus")
-	public ResponseDto updateStatus(String ids, boolean enabled) {
-		return ResponseDto.OperationSuccess(getDao().updateStatus(ids, enabled));
+	@RequireAuth("enable")
+	@RequestMapping("/enable")
+	public ResponseDto enable(String ids) {
+		return ResponseDto.OperationSuccess(getDao().updateStatus(ids, true));
+	}
+
+	@SuppressWarnings("rawtypes")
+	@RequireAuth("disable")
+	@RequestMapping("/disable")
+	public ResponseDto disable(String ids) {
+		return ResponseDto.OperationSuccess(getDao().updateStatus(ids, false));
 	}
 }

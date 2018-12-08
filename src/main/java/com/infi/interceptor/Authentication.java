@@ -1,5 +1,6 @@
 package com.infi.interceptor;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,15 +19,31 @@ import com.infi.utility.AuthUtils;
 @Component
 public class Authentication extends HandlerInterceptorAdapter {
 
-//	private final static Logger logger = LoggerFactory.getLogger(Authentication.class);
+	// private final static Logger logger =
+	// LoggerFactory.getLogger(Authentication.class);
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		HandlerMethod h = (HandlerMethod) handler;
-		RequireAuth auth = h.getMethod().getAnnotation(RequireAuth.class);
+		ArrayList<String> requiredAuthArr = new ArrayList<String>();
 
-		if (auth != null) {
+		HandlerMethod h = null;
+		try {
+			h = (HandlerMethod) handler;
+		} catch (Exception ex) {
+			return true;
+		}
+		RequireAuth controllerAuth = h.getClass().getAnnotation(RequireAuth.class);
+		if (controllerAuth != null) {
+			requiredAuthArr.add(controllerAuth.value());
+		}
+
+		RequireAuth methodAuth = h.getMethod().getAnnotation(RequireAuth.class);
+		if (methodAuth != null) {
+			requiredAuthArr.add(methodAuth.value());
+		}
+
+		if (requiredAuthArr != null && requiredAuthArr.size() > 0) {
 			TokenInfo token = AuthUtils.getTokenInfoFromRequest(request);
 			if (token == null) {
 				String s = "用户权限验证失败";
@@ -34,15 +51,22 @@ public class Authentication extends HandlerInterceptorAdapter {
 				throw new Exception(s);
 			}
 
+			request.setAttribute("cuser", token);
+
+			if (TokenInfo.isSuperRole(token.getRoleid())) {
+				return true;
+			}
+
 			Calendar loginTime = token.getLoginTime();
-			// loginTime.add(Calendar.HOUR, 6);
-			loginTime.add(Calendar.MINUTE, 1);
+			loginTime.add(Calendar.HOUR, 6);
+			// loginTime.add(Calendar.MINUTE, 1);
 			if (loginTime.before(Calendar.getInstance())) {
 				response.setStatus(HttpStatus.FORBIDDEN.value());
 				throw new Exception("登录已过期, 请重新登录");
 			}
 
-			if (!token.rights.contains(auth.value())) {
+			String requiredAuth = String.join("/", requiredAuthArr);
+			if (!token.getRightStrs().contains(requiredAuth)) {
 				response.setStatus(HttpStatus.FORBIDDEN.value());
 				throw new Exception("无权限");
 			}

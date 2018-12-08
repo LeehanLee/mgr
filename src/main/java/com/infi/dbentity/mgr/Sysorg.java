@@ -1,16 +1,16 @@
-package com.infi.dbentity.qifei;
+package com.infi.dbentity.mgr;
 import java.util.Date;
 
 /**
- * sysdepartment  generated at 2018-09-16 18:02:22 by: eric
+ * sysorg  generated at 2018-12-07 23:50:03 by: eric
  */
 
-public class Sysdepartment{
+public class Sysorg{
 	private int id;
 	private String name;
 	private Date created;
 	private boolean enabled;
-	private Integer parentid;
+	private int parentid;
 
 	public void setId(int id){
 		this.id=id;
@@ -44,11 +44,11 @@ public class Sysdepartment{
 		return enabled;
 	}
 
-	public void setParentid(Integer parentid){
+	public void setParentid(int parentid){
 		this.parentid=parentid;
 	}
 
-	public Integer getParentid(){
+	public int getParentid(){
 		return parentid;
 	}
 

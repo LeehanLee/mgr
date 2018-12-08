@@ -1,8 +1,8 @@
-package com.infi.dbentity.qifei;
+package com.infi.dbentity.mgr;
 import java.util.Date;
 
 /**
- * sysaccount  generated at 2018-09-16 18:02:22 by: eric
+ * sysaccount  generated at 2018-12-07 23:50:03 by: eric
  */
 
 public class Sysaccount{
@@ -12,8 +12,9 @@ public class Sysaccount{
 	private String mobile;
 	private Date created;
 	private boolean enabled;
-	private String departmentid;
+	private int orgid;
 	private String roleid;
+	private String extraright;
 
 	public void setId(int id){
 		this.id=id;
@@ -63,12 +64,12 @@ public class Sysaccount{
 		return enabled;
 	}
 
-	public void setDepartmentid(String departmentid){
-		this.departmentid=departmentid;
+	public void setOrgid(int orgid){
+		this.orgid=orgid;
 	}
 
-	public String getDepartmentid(){
-		return departmentid;
+	public int getOrgid(){
+		return orgid;
 	}
 
 	public void setRoleid(String roleid){
@@ -77,6 +78,14 @@ public class Sysaccount{
 
 	public String getRoleid(){
 		return roleid;
+	}
+
+	public void setExtraright(String extraright){
+		this.extraright=extraright;
+	}
+
+	public String getExtraright(){
+		return extraright;
 	}
 
 }

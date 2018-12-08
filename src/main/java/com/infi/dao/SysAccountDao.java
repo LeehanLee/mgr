@@ -1,6 +1,7 @@
 package com.infi.dao;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,25 +9,25 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import com.infi.dbentity.qifei.Sysaccount;
 import com.infi.exception.DuplicateEntityException;
 import com.infi.model.dto.ListDto;
+import com.infi.model.dto.output.SysaccountOutput;
 
 @Service
-public class SysAccountDao extends IBasicCrud<Sysaccount> {
+public class SysAccountDao extends IBasicCrud<SysaccountOutput> {
 
 	@Autowired
 	@Qualifier("primaryJdbcTemplate")
 	public JdbcTemplate jdbcTemplate;
 
 	@Override
-	public Sysaccount getById(int id) {
-		return (Sysaccount) jdbcTemplate.queryForObject("select * from sysaccount where  id=? limit 0 , 1 ",
-				new Object[] { id }, new BeanPropertyRowMapper<Sysaccount>(Sysaccount.class));
+	public SysaccountOutput getById(Object id) {
+		return (SysaccountOutput) jdbcTemplate.queryForObject("select * from sysaccount where  id=? limit 0 , 1 ",
+				new Object[] { id }, new BeanPropertyRowMapper<SysaccountOutput>(SysaccountOutput.class));
 	}
 
 	@Override
-	public boolean insert(Sysaccount a) throws DuplicateEntityException {
+	public boolean insert(SysaccountOutput a) throws DuplicateEntityException {
 		List<String> existedUsernames = (List<String>) jdbcTemplate.query(
 				"select username from sysaccount where username=? limit 0, 1;", new Object[] { a.getUsername() },
 				new BeanPropertyRowMapper<String>(String.class));
@@ -38,12 +39,12 @@ public class SysAccountDao extends IBasicCrud<Sysaccount> {
 		int successCount = jdbcTemplate.update(
 				"insert into sysaccount(username, password, mobile, created, enabled, departmentid, roleid) values(?, ?, ?, ?, ?, ?, ?) ;",
 				new Object[] { a.getUsername(), a.getPassword(), a.getMobile(), new Date(), a.getEnabled(),
-						a.getDepartmentid(), a.getRoleid() });
+						a.getOrgid(), a.getRoleid() });
 		return successCount > 0;
 	}
 
 	@Override
-	public boolean update(Sysaccount a) throws Exception {
+	public boolean update(SysaccountOutput a) throws Exception {
 		List<String> existedUsernames = (List<String>) jdbcTemplate.query(
 				"select username from sysaccount where id!=? and username=? limit 0, 1;",
 				new Object[] { a.getId(), a.getUsername() }, new BeanPropertyRowMapper<String>(String.class));
@@ -54,7 +55,7 @@ public class SysAccountDao extends IBasicCrud<Sysaccount> {
 
 		int successCount = jdbcTemplate.update(
 				"update sysaccount set username=?, password=?, mobile=?, enabled=?, departmentid=?, roleid=? where id=? ;",
-				new Object[] { a.getUsername(), a.getPassword(), a.getMobile(), a.getEnabled(), a.getDepartmentid(),
+				new Object[] { a.getUsername(), a.getPassword(), a.getMobile(), a.getEnabled(), a.getOrgid(),
 						a.getRoleid(), a.getId() });
 		return successCount > 0;
 	}
@@ -73,7 +74,7 @@ public class SysAccountDao extends IBasicCrud<Sysaccount> {
 	}
 
 	@Override
-	public ListDto<Sysaccount> getList(Integer page, Integer pageSize) {
+	public ListDto<SysaccountOutput> getList(Integer page, Integer pageSize, HashMap<String, Object> condition) {
 		if (page == null || page <= 0) {
 			page = 1;
 		}
@@ -81,15 +82,18 @@ public class SysAccountDao extends IBasicCrud<Sysaccount> {
 			pageSize = 10;
 		}
 		String where = "";
-		String sql = "select * from sysaccount " + where + " order by created desc limit ? , ? ";
+		String fields = "a.id, a.username, a.password, a.mobile, a.created, a.enabled, a.orgid, a.roleid, a.extraright, o.name as orgName, r.name as roleName";
+		String sql = "select " + fields
+				+ " from sysaccount a join sysorg o on a.orgid=o.id	join sysrole r on a.roleid=r.id " + where
+				+ " order by created desc limit ? , ? ";
 		Object[] sqlParam = new Object[] { (page - 1) * pageSize, pageSize };
 
 		String countSql = "select count(1) from sysaccount " + where;
 		Object[] countSqlParam = new Object[] {};
 
-		ListDto<Sysaccount> result = new ListDto<>();
-		result.setRows((List<Sysaccount>) jdbcTemplate.query(sql, sqlParam,
-				new BeanPropertyRowMapper<Sysaccount>(Sysaccount.class)));
+		ListDto<SysaccountOutput> result = new ListDto<>();
+		result.setRows((List<SysaccountOutput>) jdbcTemplate.query(sql, sqlParam,
+				new BeanPropertyRowMapper<SysaccountOutput>(SysaccountOutput.class)));
 		result.setPage(page);
 		result.setPageSize(pageSize);
 		result.setTotal(jdbcTemplate.queryForObject(countSql, countSqlParam, Integer.class));
@@ -97,10 +101,10 @@ public class SysAccountDao extends IBasicCrud<Sysaccount> {
 		return result;
 	}
 
-	public Sysaccount getByName(String username) {
-		List<Sysaccount> result = (List<Sysaccount>) jdbcTemplate.query(
+	public SysaccountOutput getByName(String username) {
+		List<SysaccountOutput> result = (List<SysaccountOutput>) jdbcTemplate.query(
 				"select * from sysaccount where  username=? limit 0 , 1 ", new Object[] { username },
-				new BeanPropertyRowMapper<Sysaccount>(Sysaccount.class));
+				new BeanPropertyRowMapper<SysaccountOutput>(SysaccountOutput.class));
 		return result.size() > 0 ? result.get(0) : null;
 
 	}

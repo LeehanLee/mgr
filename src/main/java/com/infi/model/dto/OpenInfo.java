@@ -1,11 +1,15 @@
 package com.infi.model.dto;
 
 import java.util.Calendar;
+import java.util.List;
+
+import com.infi.dbentity.mgr.Sysright;
 
 public class OpenInfo {
 	private String name;
 	private String role;
 	private Calendar loginTime;
+	private List<Sysright> rights;
 
 	public OpenInfo(String name, String role) {
 		this.name = name;
@@ -36,4 +40,13 @@ public class OpenInfo {
 	public void setLoginTime(Calendar loginTime) {
 		this.loginTime = loginTime;
 	}
+
+	public List<Sysright> getRights() {
+		return rights;
+	}
+
+	public void setRights(List<Sysright> rights) {
+		this.rights = rights;
+	}
+
 }

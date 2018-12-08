@@ -4,19 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.infi.annotation.RequireAuth;
 import com.infi.dao.IBasicCrud;
-import com.infi.dao.SysDepartmentDao;
-import com.infi.dbentity.qifei.Sysdepartment;
+import com.infi.dao.SysOrgDao;
+import com.infi.dbentity.mgr.Sysorg;
 
+@RequireAuth("org")
 @RestController
-@RequestMapping("api/org")
-public class SysDepartmentController extends ABasicCrudController<Sysdepartment> {
+@RequestMapping("/api/org")
+public class SysOrgController extends ABasicCrudController<Sysorg> {
 
 	@Autowired
-	SysDepartmentDao dao;
+	SysOrgDao dao;
 
 	@Override
-	IBasicCrud<Sysdepartment> getDao() {
+	IBasicCrud<Sysorg> getDao() {
 		return dao;
 	}
 }

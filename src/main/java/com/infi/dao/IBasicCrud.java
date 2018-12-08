@@ -1,5 +1,7 @@
 package com.infi.dao;
 
+import java.util.HashMap;
+
 import com.infi.exception.DuplicateEntityException;
 import com.infi.exception.ExistsChildException;
 import com.infi.model.dto.ListDto;
@@ -14,7 +16,7 @@ public abstract class IBasicCrud<T> {
 
 	public abstract boolean updateStatus(String ids, boolean enabled);
 
-	public abstract T getById(int id);
+	public abstract T getById(Object id);
 
-	public abstract ListDto<T> getList(Integer page, Integer pageSize);
+	public abstract ListDto<T> getList(Integer page, Integer pageSize, HashMap<String, Object> condition);
 }

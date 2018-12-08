@@ -1,21 +1,22 @@
-package com.infi.dbentity.qifei;
+package com.infi.dbentity.mgr;
 import java.util.Date;
 
 /**
- * sysrole  generated at 2018-09-16 18:02:22 by: eric
+ * sysrole  generated at 2018-12-07 23:50:03 by: eric
  */
 
 public class Sysrole{
-	private int id;
+	private String id;
 	private String name;
 	private Date created;
 	private boolean enabled;
+	private String rights;
 
-	public void setId(int id){
+	public void setId(String id){
 		this.id=id;
 	}
 
-	public int getId(){
+	public String getId(){
 		return id;
 	}
 
@@ -41,6 +42,14 @@ public class Sysrole{
 
 	public boolean getEnabled(){
 		return enabled;
+	}
+
+	public void setRights(String rights){
+		this.rights=rights;
+	}
+
+	public String getRights(){
+		return rights;
 	}
 
 }

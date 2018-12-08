@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
 	public ResponseDto<String> jsonErrorHandler(HttpServletRequest req, Exception e) throws Exception {
 		ResponseDto<String> result = ResponseDto.Error(e.getMessage());
 		TokenInfo token = AuthUtils.getTokenInfoFromRequest(req);
-		String msg = "Header里的token为空";
+		String msg = "未登录";
 		if (token != null) {
 			msg = "当前用户: " + token.getName();
 		}

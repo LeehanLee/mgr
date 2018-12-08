@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class MgrApplication {
 
 	public static void main(String[] args) {
-		// EntitiesGenerator gen = new
-		// EntitiesGenerator("jdbc:mysql://localhost:3306", "qifei", "root",
-		// "123456");
-		// gen.Generate();
+//		 EntitiesGenerator gen = new
+//		 EntitiesGenerator("jdbc:mysql://localhost:3306", "mgr", "root",
+//		 "123456");
+//		 gen.Generate();
 
 		SpringApplication.run(MgrApplication.class, args);
 	}
