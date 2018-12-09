@@ -24,8 +24,8 @@ public class SysOrgDao extends IBasicCrud<Sysorg> {
 
 	@Override
 	public Sysorg getById(Object id) {
-		return (Sysorg) jdbcTemplate.query("select * from sysorg where  id=? limit 0 , 1 ",
-				new Object[] { id }, new BeanPropertyRowMapper<Sysorg>(Sysorg.class));
+		return (Sysorg) jdbcTemplate.query("select * from sysorg where  id=? limit 0 , 1 ", new Object[] { id },
+				new BeanPropertyRowMapper<Sysorg>(Sysorg.class));
 	}
 
 	@Override
@@ -46,24 +46,23 @@ public class SysOrgDao extends IBasicCrud<Sysorg> {
 	@Override
 	public boolean update(Sysorg a) throws DuplicateEntityException {
 		List<String> existedNames = (List<String>) jdbcTemplate.query(
-				"select name from sysorg where id!=? and name=? limit 0, 1;",
-				new Object[] { a.getId(), a.getName() }, new BeanPropertyRowMapper<String>(String.class));
+				"select name from sysorg where id!=? and name=? limit 0, 1;", new Object[] { a.getId(), a.getName() },
+				new BeanPropertyRowMapper<String>(String.class));
 
 		if (existedNames.size() > 0) {
 			throw new DuplicateEntityException("组织名已被占用");
 		}
-		int successCount = jdbcTemplate.update(
-				"update sysorg set name=?,  enabled=? where id=? ;",
+		int successCount = jdbcTemplate.update("update sysorg set name=?,  enabled=? where id=? ;",
 				new Object[] { a.getName(), a.getEnabled(), a.getId() });
 		return successCount > 0;
 	}
 
 	@Override
-	public boolean delete(int id) throws ExistsChildException {
-		Integer childCount = (Integer) jdbcTemplate.queryForObject(
-				"select count(1) from sysorg where parentid=?;", new Object[] { id }, Integer.class);
+	public boolean delete(Object id) throws ExistsChildException {
+		Integer childCount = (Integer) jdbcTemplate.queryForObject("select count(1) from sysorg where parentid=?;",
+				new Object[] { id }, Integer.class);
 		if (childCount > 0) {
-			throw new ExistsChildException("当前组织存在下级组织，不可删除"); 
+			throw new ExistsChildException("当前组织存在下级组织，不可删除");
 		}
 
 		int successCount = jdbcTemplate.update("delete from sysorg where id=? ;", new Object[] { id });
@@ -86,15 +85,15 @@ public class SysOrgDao extends IBasicCrud<Sysorg> {
 			pageSize = 10;
 		}
 		String where = "";
-		String sql = "select * from sysorg " + where + " order by created desc limit ? , ? ";
+		String sql = "select * from sysorg " + where + " order by created asc limit ? , ? ";
 		Object[] sqlParam = new Object[] { (page - 1) * pageSize, pageSize };
 
-		String countSql = "select count(1) from sysaccount " + where;
+		String countSql = "select count(1) from sysorg " + where;
 		Object[] countSqlParam = new Object[] {};
 
 		ListDto<Sysorg> result = new ListDto<>();
-		result.setRows((List<Sysorg>) jdbcTemplate.query(sql, sqlParam,
-				new BeanPropertyRowMapper<Sysorg>(Sysorg.class)));
+		result.setRows(
+				(List<Sysorg>) jdbcTemplate.query(sql, sqlParam, new BeanPropertyRowMapper<Sysorg>(Sysorg.class)));
 		result.setPage(page);
 		result.setPageSize(pageSize);
 		result.setTotal(jdbcTemplate.queryForObject(countSql, countSqlParam, Integer.class));

@@ -1,9 +1,6 @@
 package com.infi.controller;
 
 import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.infi.annotation.RequireAuth;
 import com.infi.dao.IBasicCrud;
 import com.infi.dao.SysRightDao;
@@ -11,7 +8,6 @@ import com.infi.dbentity.mgr.Sysright;
 import com.infi.model.dto.ListDto;
 import com.infi.model.dto.ResponseDto;
 import com.infi.model.dto.TokenInfo;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;

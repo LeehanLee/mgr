@@ -12,7 +12,7 @@ public abstract class IBasicCrud<T> {
 
 	public abstract boolean update(T a) throws Exception;
 
-	public abstract boolean delete(int id) throws ExistsChildException;
+	public abstract boolean delete(Object id) throws ExistsChildException;
 
 	public abstract boolean updateStatus(String ids, boolean enabled);
 

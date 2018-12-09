@@ -48,14 +48,14 @@ public class SysRoleDao extends IBasicCrud<Sysrole> {
 			throw new DuplicateEntityException("角色名已被占用");
 		}
 
-		int successCount = jdbcTemplate.update("update sysrole set name=?, enabled=? where id=? ;",
-				new Object[] { a.getName(), a.getEnabled(), a.getId() });
+		int successCount = jdbcTemplate.update("update sysrole set name=?, enabled=?, rights=? where id=? ;",
+				new Object[] { a.getName(), a.getEnabled(), a.getRights(), a.getId() });
 
 		return successCount > 0;
 	}
 
 	@Override
-	public boolean delete(int id) {
+	public boolean delete(Object id) {
 		int successCount = jdbcTemplate.update("delete from sysrole where id=? ;", new Object[] { id });
 		return successCount > 0;
 	}
@@ -82,7 +82,7 @@ public class SysRoleDao extends IBasicCrud<Sysrole> {
 			pageSize = 10;
 		}
 		String where = "";
-		String sql = "select * from sysrole " + where + " order by created desc limit ? , ? ";
+		String sql = "select * from sysrole " + where + " order by created asc limit ? , ? ";
 		Object[] sqlParam = new Object[] { (page - 1) * pageSize, pageSize };
 
 		String countSql = "select count(1) from sysrole " + where;

@@ -37,7 +37,7 @@ public class SysAccountDao extends IBasicCrud<SysaccountOutput> {
 		}
 
 		int successCount = jdbcTemplate.update(
-				"insert into sysaccount(username, password, mobile, created, enabled, departmentid, roleid) values(?, ?, ?, ?, ?, ?, ?) ;",
+				"insert into sysaccount(username, password, mobile, created, enabled, orgid, roleid) values(?, ?, ?, ?, ?, ?, ?) ;",
 				new Object[] { a.getUsername(), a.getPassword(), a.getMobile(), new Date(), a.getEnabled(),
 						a.getOrgid(), a.getRoleid() });
 		return successCount > 0;
@@ -54,14 +54,14 @@ public class SysAccountDao extends IBasicCrud<SysaccountOutput> {
 		}
 
 		int successCount = jdbcTemplate.update(
-				"update sysaccount set username=?, password=?, mobile=?, enabled=?, departmentid=?, roleid=? where id=? ;",
+				"update sysaccount set username=?, password=?, mobile=?, enabled=?, orgid=?, roleid=? where id=? ;",
 				new Object[] { a.getUsername(), a.getPassword(), a.getMobile(), a.getEnabled(), a.getOrgid(),
 						a.getRoleid(), a.getId() });
 		return successCount > 0;
 	}
 
 	@Override
-	public boolean delete(int id) {
+	public boolean delete(Object id) {
 		int successCount = jdbcTemplate.update("delete from sysaccount where id=? ;", new Object[] { id });
 		return successCount > 0;
 	}
@@ -84,7 +84,7 @@ public class SysAccountDao extends IBasicCrud<SysaccountOutput> {
 		String where = "";
 		String fields = "a.id, a.username, a.password, a.mobile, a.created, a.enabled, a.orgid, a.roleid, a.extraright, o.name as orgName, r.name as roleName";
 		String sql = "select " + fields
-				+ " from sysaccount a join sysorg o on a.orgid=o.id	join sysrole r on a.roleid=r.id " + where
+				+ " from sysaccount a left join sysorg o on a.orgid=o.id left join sysrole r on a.roleid=r.id " + where
 				+ " order by created desc limit ? , ? ";
 		Object[] sqlParam = new Object[] { (page - 1) * pageSize, pageSize };
 

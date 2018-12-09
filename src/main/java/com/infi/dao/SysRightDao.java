@@ -35,7 +35,7 @@ public class SysRightDao extends IBasicCrud<Sysright> {
 	}
 
 	@Override
-	public boolean delete(int id) throws ExistsChildException {
+	public boolean delete(Object id) throws ExistsChildException {
 		// TODO Auto-generated method stub
 		return false;
 	}

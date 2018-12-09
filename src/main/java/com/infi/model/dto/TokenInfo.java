@@ -2,8 +2,6 @@ package com.infi.model.dto;
 
 import java.util.List;
 
-import com.infi.utility.StringDigestUtil;
-
 public class TokenInfo extends OpenInfo {
 	public TokenInfo() {
 		super("", "");
