@@ -12,6 +12,7 @@ import com.infi.exception.ExistsChildException;
 import com.infi.model.dto.ListDto;
 import com.infi.model.dto.ResponseDto;
 
+@RequireAuth("account")
 public abstract class ABasicCrudController<T> {
 
 	abstract IBasicCrud<T> getDao();

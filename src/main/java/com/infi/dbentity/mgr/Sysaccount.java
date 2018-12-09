@@ -85,13 +85,11 @@ public class Sysaccount {
 		return roleid;
 	}
 
-	public void setExtraright(List<String> extraright) {
-		this.extraright = Json.serialize(extraright);
+	public String getExtraright() {
+		return extraright;
 	}
 
-	public List<String> getExtraright() {
-		return Json.deserialize(extraright, new TypeReference<List<String>>() {
-		});
+	public void setExtraright(String extraright) {
+		this.extraright = extraright;
 	}
-
 }

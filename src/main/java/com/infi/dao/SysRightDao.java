@@ -1,5 +1,6 @@
 package com.infi.dao;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -60,16 +61,17 @@ public class SysRightDao extends IBasicCrud<Sysright> {
 		if (pageSize == null || pageSize <= 0) {
 			pageSize = 100000;
 		}
-		String where = "id in (null)";
+		String where = " where id in (null)";// 默认不让查
 		List<String> rightids = (List<String>) condition.get("rightids");
+		ArrayList<String> newArr = new ArrayList<String>();
 		if (condition != null && rightids != null) {
 			for (int i = 0; i < rightids.size(); i++) {
-				rightids.set(i, "'" + rightids.get(i) + "''");
+				newArr.add("'" + rightids.get(i) + "'");
 			}
-			where = " id in (" + String.join(",", rightids) + ")";
+			where = "where id in (" + String.join(",", newArr) + ")";// 一般用户只查自己权限范围内的
 		}
 		if (condition.get("roleid") != null && "super".equals(condition.get("roleid"))) {
-			where = "";
+			where = "";// super角色的用户查可所有
 		}
 		String fields = "*";
 		String sql = "select " + fields + " from sysright " + where + " order by created desc limit ? , ? ";

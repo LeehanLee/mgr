@@ -2,6 +2,7 @@ package com.infi.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 //import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import com.infi.model.dto.CurrentUser;
 import com.infi.model.dto.OpenInfo;
 import com.infi.model.dto.ResponseDto;
 import com.infi.model.dto.TokenInfo;
+import com.infi.model.dto.output.SysaccountOutput;
 import com.infi.model.dto.output.SysroleDto;
 import com.infi.service.IAuthenticationService;
 import com.infi.utility.AuthUtils;
@@ -42,8 +44,9 @@ public class HomeController {
 	@PostMapping("/api/restlogin")
 	@ResponseBody
 	public ResponseDto restlogin(@RequestBody Sysaccount account, HttpServletResponse response) throws Exception {
-		Sysaccount acc = service.login(account);
-		if (acc != null) {
+		Sysaccount a = service.login(account);
+		if (a != null) {
+			SysaccountOutput acc = new SysaccountOutput(a);
 			SysroleDto role = new SysroleDto(roledao.getById(acc.getRoleid()));
 
 			CurrentUser cuser = new CurrentUser();
@@ -68,7 +71,7 @@ public class HomeController {
 		}
 	}
 
-	private ArrayList<String> mergeRoleRightsAndAccRights(Sysaccount acc, SysroleDto role) throws Exception {
+	private ArrayList<String> mergeRoleRightsAndAccRights(SysaccountOutput acc, SysroleDto role) throws Exception {
 		ArrayList<String> result = new ArrayList<String>();
 
 		if (role == null) {
@@ -79,8 +82,15 @@ public class HomeController {
 			throw new Exception("角色未启用");
 		}
 
-		result.addAll(role.getRights());// 账号角色所有的权限
-		result.addAll(acc.getExtraright());// 也可对一个账号额外指定权限
+		List<String> s = role.getRights();
+		if (s != null) {
+			result.addAll(s);// 账号角色所有的权限
+		}
+
+		List<String> es = acc.getExtraright();
+		if (es != null) {
+			result.addAll(es);// 也可对一个账号额外指定权限
+		}
 
 		return result;
 	}

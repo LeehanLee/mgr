@@ -23,8 +23,10 @@ public class SysroleDto {
 		this.name = role.getName();
 		this.created = role.getCreated();
 		this.enabled = role.getEnabled();
-		this.rights = Json.deserialize(role.getRights(), new TypeReference<List<String>>() {
-		});
+		if (null != role.getRights() && !"".equals(role.getRights())) {
+			this.rights = Json.deserialize(role.getRights(), new TypeReference<List<String>>() {
+			});
+		}
 	}
 
 	public Sysrole toSysrole() {
