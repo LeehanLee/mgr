@@ -33,6 +33,8 @@ public class SysaccountOutput {
 		this.setEnabled(acc.getEnabled());
 		this.setOrgid(acc.getOrgid());
 		this.setRoleid(acc.getRoleid());
+		this.setOrgName(acc.getOrgName());
+		this.setRoleName(acc.getRoleName());
 		if (null != acc.getExtraright() && !"".equals(acc.getExtraright())) {
 			this.setExtraright(Json.deserialize(acc.getExtraright(), new TypeReference<List<String>>() {
 			}));

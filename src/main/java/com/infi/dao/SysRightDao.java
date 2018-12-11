@@ -74,7 +74,7 @@ public class SysRightDao extends IBasicCrud<Sysright> {
 			where = "";// super角色的用户查可所有
 		}
 		String fields = "*";
-		String sql = "select " + fields + " from sysright " + where + " order by created desc limit ? , ? ";
+		String sql = "select " + fields + " from sysright " + where + " order by created asc limit ? , ? ";
 		Object[] sqlParam = new Object[] { (page - 1) * pageSize, pageSize };
 
 		String countSql = "select count(1) from sysaccount " + where;

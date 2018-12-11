@@ -26,7 +26,7 @@ public class SysRightController extends ABasicCrudController<Sysright> {
         return dao;
     }
 
-    @RequireAuth("getMyRights")
+    @RequireAuth("getList")
     @RequestMapping("/getMyRights")
     public ResponseDto<ListDto<Sysright>> getMyRights(Integer page, Integer pageSize,
             @RequestAttribute("cuser") TokenInfo cuser) {

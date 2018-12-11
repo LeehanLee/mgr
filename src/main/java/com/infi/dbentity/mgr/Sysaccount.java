@@ -18,7 +18,25 @@ public class Sysaccount {
 	private Date created;
 	private boolean enabled;
 	private int orgid;
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
 	private String roleid;
+	private String roleName;
+	private String orgName;
 	private String extraright;
 
 	public void setId(int id) {
