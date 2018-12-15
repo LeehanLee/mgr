@@ -13,7 +13,7 @@ public class AuthUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(AuthUtils.class);
 
-	public static TokenInfo getTokenInfoFromRequest(HttpServletRequest request) {
+	public static TokenInfo getTokenInfoFromRequest(HttpServletRequest request) throws Exception {
 		if (request == null) {
 			return null;
 		}
@@ -31,13 +31,13 @@ public class AuthUtils {
 		return des + "." + StringDigestUtil.mixedDigest(des);
 	}
 
-	public static TokenInfo buildTokenObj(String tokenStr) {
+	public static TokenInfo buildTokenObj(String tokenStr) throws Exception {
 		if (tokenStr == null) {
 			return null;
 		}
 		String[] splitedStrs = tokenStr.split("\\.");
 		if (splitedStrs.length != 4) {
-			return null;
+			throw new Exception("数据段长度验证失败");// 期望的是有4段数据，用.分隔的
 		}
 		String des = splitedStrs[0];
 		try {
@@ -45,13 +45,13 @@ public class AuthUtils {
 				String s = new String(Base64.getDecoder().decode(Des.decrypt(des, Charset.forName("utf-8"))));
 				TokenInfo token = Json.deserialize(s, TokenInfo.class);
 				return token;
+			} else {
+				throw new Exception("权限验证失败");// 表示被篡改了
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage() + System.lineSeparator() + e.getStackTrace());
+			logger.error("buildTokenObj faile", e);
 			return null;
 		}
-
-		return null;
 	}
 
 }

@@ -40,7 +40,6 @@ public class Authentication extends HandlerInterceptorAdapter {
 
 		RequireAuth r = h.getBeanType().getAnnotation(RequireAuth.class);
 		if (r != null) {
-			int a = 1;
 			requiredAuthArr.add(r.value());
 		}
 		RequireAuth methodAuth = h.getMethod().getAnnotation(RequireAuth.class);
