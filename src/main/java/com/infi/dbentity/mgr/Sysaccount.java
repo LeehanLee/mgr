@@ -1,11 +1,6 @@
 package com.infi.dbentity.mgr;
 
 import java.util.Date;
-import java.util.List;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.infi.utility.Json;
-
 /**
  * sysaccount generated at 2018-12-07 23:50:03 by: eric
  */
