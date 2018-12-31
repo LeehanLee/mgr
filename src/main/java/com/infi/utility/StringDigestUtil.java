@@ -74,7 +74,6 @@ public class StringDigestUtil {
 		MessageDigest md = MessageDigest.getInstance("MD5");
 		byte[] r = md.digest(srcBytes);
 		return r;
-
 	}
 
 	private static String getBase64String(byte[] srcBytes) {

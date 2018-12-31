@@ -12,10 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.infi.dao.SysRightDao;
 import com.infi.dao.SysRoleDao;
 import com.infi.dbentity.mgr.Sysaccount;
+import com.infi.exception.NoLogException;
 import com.infi.model.dto.CurrentUser;
 import com.infi.model.dto.OpenInfo;
 import com.infi.model.dto.ResponseDto;
@@ -25,6 +27,7 @@ import com.infi.model.dto.output.SysroleDto;
 import com.infi.service.IAuthenticationService;
 import com.infi.utility.AuthUtils;
 import com.infi.utility.Json;
+import com.infi.utility.StringDigestUtil;
 
 @Controller
 public class HomeController {
@@ -39,6 +42,12 @@ public class HomeController {
 
 	@Autowired
 	SysRightDao rightdao;
+
+	@RequestMapping("test")
+	@ResponseBody
+	public String test(String i) {
+		return StringDigestUtil.mixedDigest(i);
+	}
 
 	@SuppressWarnings("rawtypes")
 	@PostMapping("/api/restlogin")
@@ -75,11 +84,11 @@ public class HomeController {
 		ArrayList<String> result = new ArrayList<String>();
 
 		if (role == null) {
-			throw new Exception("角色不存在");
+			throw new NoLogException("角色不存在");
 		}
 
 		if (!role.isEnabled() && role.getId() != "super") {// super 角色不受禁用限制
-			throw new Exception("角色未启用");
+			throw new NoLogException("角色未启用");
 		}
 
 		List<String> s = role.getRights();
@@ -109,16 +118,17 @@ public class HomeController {
 	public String index(HttpServletResponse response) {
 		return "index";
 	}
+
 	//
 	// // 这种方式返回页面，还需要在pom.xm里手动添加thymeleaf的Starter。
 	// // 加完starter后，在application.properties里不需要额外的配置，默认就会去templates文件夹下读取模版
-	// @GetMapping("login")
-	// public String login(HttpServletResponse response) {
-	// logger.info("经过login页面的方法");
-	// CookieUtils.writeCookie(response, "username", "ttt");
-	// CookieUtils.writeCookie(response, "login_time", new Date().toString());
-	// return "home/login";
-	// }
+	@GetMapping("login")
+	public String login(HttpServletResponse response) {
+		// logger.info("经过login页面的方法");
+		// CookieUtils.writeCookie(response, "username", "ttt");
+		// CookieUtils.writeCookie(response, "login_time", new Date().toString());
+		return "home/login";
+	}
 	//
 	// @PostMapping("login")
 	// public String login(String username, String password) {

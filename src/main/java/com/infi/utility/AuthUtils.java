@@ -2,9 +2,7 @@ package com.infi.utility;
 
 import java.nio.charset.Charset;
 import java.util.Base64;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.infi.model.dto.TokenInfo;
@@ -53,5 +51,4 @@ public class AuthUtils {
 			return null;
 		}
 	}
-
 }

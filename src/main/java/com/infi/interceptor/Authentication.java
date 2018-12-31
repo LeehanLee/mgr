@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.infi.annotation.RequireAuth;
+import com.infi.exception.NoLogException;
 import com.infi.model.dto.TokenInfo;
 import com.infi.utility.AuthUtils;
 
@@ -52,7 +53,7 @@ public class Authentication extends HandlerInterceptorAdapter {
 			if (token == null) {
 				String s = "用户权限验证失败";
 				response.setStatus(HttpStatus.FORBIDDEN.value());
-				throw new Exception(s);
+				throw new NoLogException(s);
 			}
 
 			request.setAttribute("cuser", token);
@@ -66,13 +67,13 @@ public class Authentication extends HandlerInterceptorAdapter {
 			// loginTime.add(Calendar.MINUTE, 1);
 			if (loginTime.before(Calendar.getInstance())) {
 				response.setStatus(HttpStatus.FORBIDDEN.value());
-				throw new Exception("登录已过期, 请重新登录");
+				throw new NoLogException("登录已过期, 请重新登录");
 			}
 
 			String requiredAuth = String.join("/", requiredAuthArr);
 			if (!token.getRightStrs().contains(requiredAuth)) {
 				response.setStatus(HttpStatus.FORBIDDEN.value());
-				throw new Exception("无权限");
+				throw new NoLogException("无权限");
 			}
 		}
 

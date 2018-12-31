@@ -35,9 +35,10 @@ public class SysAccountDao extends IBasicCrud<Sysaccount> {
 			throw new DuplicateEntityException("用户名已被占用");
 		}
 
+		a.setCreated(new Date());
 		int successCount = jdbcTemplate.update(
 				"insert into sysaccount(username, password, mobile, created, enabled, orgid, roleid) values(?, ?, ?, ?, ?, ?, ?) ;",
-				new Object[] { a.getUsername(), a.getPassword(), a.getMobile(), new Date(), a.getEnabled(),
+				new Object[] { a.getUsername(), a.getPassword(), a.getMobile(), a.getCreated(), a.getEnabled(),
 						a.getOrgid(), a.getRoleid() });
 		return successCount > 0;
 	}

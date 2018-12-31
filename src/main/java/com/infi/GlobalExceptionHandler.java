@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.infi.exception.NoLogException;
 import com.infi.model.dto.ResponseDto;
 import com.infi.model.dto.TokenInfo;
 import com.infi.utility.AuthUtils;
@@ -24,7 +26,9 @@ public class GlobalExceptionHandler {
 		if (token != null) {
 			msg = "当前用户: " + token.getName();
 		}
-		logger.error(msg, e);
+		if (!(e instanceof NoLogException)) {
+			logger.error(msg, e);
+		}
 
 		return result;
 	}
